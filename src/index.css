@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --surface: #071b42;
+  --surface-2: #0f2d63;
+  --surface-3: #122f67;
+  --brand: #4dd3ff;
+  --brand-soft: #80e6ff;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background-color: #040b1a;
+  background-image:
+    radial-gradient(circle at top left, rgba(77, 211, 255, 0.16), transparent 18%),
+    radial-gradient(circle at 85% 15%, rgba(72, 199, 255, 0.14), transparent 18%),
+    linear-gradient(180deg, #071b42 0%, #040b1a 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(77, 211, 255, 0.35);
+  color: #fff;
+}
+
+@layer components {
+  .card-glow {
+    @apply rounded-[2rem] border border-slate-800/70 bg-slate-950/80 p-6 shadow-[0_20px_80px_-35px_rgba(16,24,40,0.75)];
+  }
+
+  .page-title {
+    @apply text-3xl font-semibold text-white sm:text-4xl;
+  }
+
+  .section-heading {
+    @apply text-lg font-semibold text-cyan-200;
+  }
+
+  .hero-pill {
+    @apply inline-flex items-center rounded-full bg-cyan-400/10 px-4 py-1.5 text-sm font-medium text-cyan-100 ring-1 ring-cyan-300/20;
+  }
+}
