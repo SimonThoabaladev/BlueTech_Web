@@ -1,36 +1,54 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+} from 'firebase/auth'
+import { auth } from './firebase'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const stored = window.localStorage.getItem('bluetech-user')
-    if (stored) {
-      setUser(JSON.parse(stored))
-    }
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          name: firebaseUser.displayName || firebaseUser.email?.split('@')[0],
+          photoURL: firebaseUser.photoURL || null,
+        })
+      } else {
+        setUser(null)
+      }
+      setLoading(false)
+    })
+
+    return unsubscribe
   }, [])
 
   const value = useMemo(
     () => ({
       user,
-      login(email) {
-        const next = { email, name: email.split('@')[0] }
-        window.localStorage.setItem('bluetech-user', JSON.stringify(next))
-        setUser(next)
+      loading,
+      login(email, password) {
+        return signInWithEmailAndPassword(auth, email, password)
       },
-      signup(name, email) {
-        const next = { name, email }
-        window.localStorage.setItem('bluetech-user', JSON.stringify(next))
-        setUser(next)
+      signup(name, email, password) {
+        return createUserWithEmailAndPassword(auth, email, password).then((userCredential) =>
+          updateProfile(userCredential.user, { displayName: name }),
+        )
       },
       logout() {
-        window.localStorage.removeItem('bluetech-user')
-        setUser(null)
+        return signOut(auth)
       },
     }),
-    [user],
+    [user, loading],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

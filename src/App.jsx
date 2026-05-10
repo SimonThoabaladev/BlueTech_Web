@@ -25,10 +25,12 @@ const linkClass = ({ isActive }) =>
 
 function RequireAuth({ children }) {
   const auth = useAuth()
-  if (!auth.user) {
-    return <Navigate to="/login" replace />
-  }
-  return children
+  return auth.user ? children : <Navigate to="/login" replace />
+}
+
+
+function LoginWithIntro() {
+  return <Login />
 }
 
 function App() {
@@ -89,7 +91,7 @@ function AppShell() {
 
       <main className="mx-auto max-w-7xl px-4 py-8">
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<LoginWithIntro />} />
           <Route path="/signup" element={<CreateAccount />} />
           <Route
             path="/dashboard"
@@ -142,6 +144,39 @@ function AppShell() {
           <Route path="*" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
         </Routes>
       </main>
+
+      <footer className="border-t border-slate-800/80 bg-slate-950/95 backdrop-blur-lg">
+        <div className="mx-auto max-w-7xl px-4 py-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-4">BlueTech Solutions</h3>
+              <p className="text-slate-300 text-sm">
+                Creative business solutions for modern enterprises. Empowering innovation through technology.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-md font-semibold text-white mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-sm text-slate-300">
+                <li><NavLink to="/" className="hover:text-cyan-300 transition">News</NavLink></li>
+                <li><NavLink to="/services" className="hover:text-cyan-300 transition">Services</NavLink></li>
+                <li><NavLink to="/consult" className="hover:text-cyan-300 transition">Consult</NavLink></li>
+                <li><NavLink to="/contact" className="hover:text-cyan-300 transition">Contact</NavLink></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-md font-semibold text-white mb-4">Contact Info</h4>
+              <div className="text-sm text-slate-300 space-y-2">
+                <p>Email: info@bluetechblog.com</p>
+                <p>Phone: (+266) 624 13 823</p>
+                <p>Address: Qoaling, Maseru 100</p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-400">
+            <p>&copy; 2024 BlueTech Solutions. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </>
   )
 }

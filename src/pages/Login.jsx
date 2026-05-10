@@ -7,11 +7,18 @@ export default function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    auth.login(email)
-    navigate('/dashboard')
+    setError('')
+
+    try {
+      await auth.login(email, password)
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err.message || 'Unable to sign in. Please try again.')
+    }
   }
 
   return (
@@ -51,6 +58,9 @@ export default function Login() {
             className="w-full rounded-3xl border border-slate-700 bg-slate-950/90 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20"
           />
         </div>
+
+        {error && <p className="text-sm text-red-400">{error}</p>}
+
         <button
           type="submit"
           className="w-full rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200"
